@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Holdings BPO - Compliance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      background-color: #001d4a;
+      position: relative;
+    }
+
+    .background {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('fondo_holdings_bpo.webp') no-repeat left bottom;
+      background-size: 85%;
+      background-position: left bottom;
+      z-index: 1;
+    }
+
+    #compliance-container {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 64px;
+      font-weight: bold;
+      color: white;
+      letter-spacing: 8px;
+      z-index: 5;
+      display: flex;
+      gap: 5px;
+      pointer-events: none;
+    }
+
+    #compliance-container span {
+      display: inline-block;
+      transform: translate(0, 0);
+      opacity: 0;
+      transition: transform 1.2s ease, opacity 1s ease;
+    }
+
+    .boton {
+      position: absolute;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .boton:hover {
+      outline: 2px dashed rgba(46, 163, 242, 0.4);
+      border-radius: 12px;
+    }
+
+    /* Burbuja sin triángulo */
+    .bubble {
+      position: absolute;
+      right: calc(-62px + 90px);
+      bottom: calc(180px + 740px - 350px);
+      max-width: 400px;
+      background: #ffffff;
+      color: #001d4a;
+      border-radius: 20px;
+      padding: 24px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.6;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      z-index: 15;
+      transition: transform 0.3s ease;
+    }
+
+    .bubble::after {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo -->
+  <div class="background"></div>
+
+  <!-- Texto Compliance animado -->
+  <div id="compliance-container">
+    <span>C</span><span>O</span><span>M</span><span>P</span><span>L</span><span>I</span><span>A</span><span>N</span><span>C</span><span>E</span>
+  </div>
+
+  <!-- Botones funcionales invisibles -->
+  <button id="btn-tools" class="boton"
+    style="top: calc(78.5% + 74px); left: calc(12.5% + 74px); width: calc(180px + 55px); height: 70px;"
+    onclick="location.href='tools.html'" title="Tools"></button>
+
+  <button id="btn-blog" class="boton"
+    style="top: calc(78.5% + 74px); left: calc(28.2% + 74px); width: calc(180px + 74px); height: 70px;"
+    onclick="location.href='blog.html'" title="Blog"></button>
+
+  <button id="btn-sam" class="boton"
+    style="top: calc(82% + 37px); left: calc(47.5% + 44px); width: calc(200px + 55px); height: 80px;"
+    onclick="location.href='sanciones.html'" title="SAM"></button>
+
+  <!-- Burbuja decorativa sin triángulo -->
+  <div class="bubble">
+    En Holdings BPO nuestros clientes ponen en nuestras manos el riesgo y nosotros lo transformamos en confianza.
+  </div>
+
+  <!-- Animación Compliance -->
+  <script>
+    const container = document.getElementById("compliance-container");
+    const letters = Array.from(container.children);
+
+    function disorganizeLetters() {
+      letters.forEach((letter, i) => {
+        const offsetX = (Math.random() - 0.5) * 300;
+        const offsetY = (Math.random() - 0.5) * 300;
+        letter.style.transitionDelay = `${Math.random()}s`;
+        letter.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${Math.random() * 360}deg)`;
+        letter.style.opacity = 0.2;
+      });
+    }
+
+    function organizeLetters() {
+      letters.forEach((letter, i) => {
+        letter.style.transitionDelay = `${i * 0.05}s`;
+        letter.style.transform = `translate(0, 0) rotate(0deg)`;
+        letter.style.opacity = 1;
+      });
+    }
+
+    function animateLoop() {
+      disorganizeLetters();
+      setTimeout(organizeLetters, 2500);
+      setTimeout(disorganizeLetters, 10000);
+    }
+
+    animateLoop();
+    setInterval(animateLoop, 15000);
+  </script>
+
+</body>
+</html>

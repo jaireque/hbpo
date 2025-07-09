@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAM - Sanction and Adverse Media</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0039a6 0%, #1A2B45 100%);
+    }
+
+    .noise, .circle, .circle.small {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .noise {
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/noise.png');
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .circle {
+      width: 800px; height: 800px;
+      background: rgba(255, 255, 255, 0.03);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+
+    .circle.small {
+      width: 400px; height: 400px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .sammy {
+      position: absolute;
+      bottom: 20px;
+      left: 30px;
+      height: 320px;
+      z-index: 2;
+      cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .bounce {
+      animation: bounce 1s infinite;
+    }
+
+    .chat-box, .trivia-box {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 12px;
+      background: linear-gradient(145deg, #1a2b45, #0f1d30);
+      border: 3px solid #2ea3f2;
+      box-shadow: 0 0 20px #2ea3f280;
+      color: white;
+    }
+
+    .chat-box {
+      left: 20%;
+      width: 60%;
+      height: 70%;
+      display: none;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    .chat-box.active {
+      display: flex;
+    }
+
+    .chat-header {
+      padding: 12px 20px;
+      background-color: #2ea3f2;
+      font-weight: bold;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      font-size: 16px;
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #2ea3f2;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      background: #0f1d30;
+      color: white;
+      border-bottom-left-radius: 12px;
+    }
+
+    .chat-input button {
+      background-color: #2ea3f2;
+      border: none;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      border-bottom-right-radius: 12px;
+    }
+
+    .message {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.bot {
+      justify-content: flex-start;
+    }
+
+    .message.bot img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 12px #2ea3f2;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0px #2ea3f280; }
+      50% { box-shadow: 0 0 12px #2ea3f2; }
+    }
+
+    .bubble {
+      background: #2ea3f2;
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 70%;
+    }
+
+    .user .bubble {
+      background: #a4d2f3;
+      color: #0039a6;
+    }
+
+    .trivia-box {
+      right: 40px;
+      width: 350px;
+      padding: 16px;
+      z-index: 4;
+    }
+
+    .trivia-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 18px;
+      color: #a4d2f3;
+    }
+
+    .trivia-question {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .trivia-options button {
+      display: block;
+      margin-bottom: 8px;
+      width: 100%;
+      background-color: #2ea3f2;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .trivia-options button:hover {
+      background-color: #1b8cd4;
+    }
+
+    .trivia-feedback {
+      margin-top: 10px;
+      font-style: italic;
+      color: #ffda7b;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #2ea3f2;
+      background-color: transparent;
+      border: 2px solid #2ea3f2;
+      padding: 8px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 10;
+      animation: float-bounce 2.5s ease-in-out infinite;
+      box-shadow: 0 0 6px #2ea3f240;
+    }
+
+    .back-button:hover {
+      background-color: #2ea3f2;
+      color: #0f1d30;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #2ea3f2;
+    }
+
+    .back-icon {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      transition: stroke 0.3s ease;
+    }
+
+    @keyframes float-bounce {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flecha de regreso -->
+  <a href="index.html" class="back-button">
+    <svg xmlns="http://www.w3.org/2000/svg" class="back-icon" viewBox="0 0 24 24" fill="none" stroke="#2ea3f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+
+  <div class="noise"></div>
+  <div class="circle"></div>
+  <div class="circle small"></div>
+
+  <img src="sammy.png" class="sammy bounce" id="sammy" alt="Sammy" />
+
+  <!-- Trivia -->
+  <div class="trivia-box" id="trivia-box">
+    <div class="trivia-title">💼 Compliance Trivia</div>
+    <div class="trivia-question" id="trivia-question">Loading question...</div>
+    <div class="trivia-options" id="trivia-options"></div>
+    <div class="trivia-feedback" id="trivia-feedback"></div>
+  </div>
+
+  <!-- Chat -->
+  <div class="chat-box" id="chat-box">
+    <div class="chat-header">
+      Sammy
+      <button class="close-btn" onclick="minimizeChat()">✖</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="¿En qué puedo ayudarte?" />
+      <button onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    const sammy = document.getElementById('sammy');
+    const chatBox = document.getElementById('chat-box');
+    const input = document.getElementById('user-input');
+    const messages = document.getElementById('chat-messages');
+    const triviaBox = document.getElementById('trivia-box');
+
+    let hasWelcomed = false;
+
+    setInterval(() => {
+      sammy.classList.toggle('bounce');
+    }, 15000);
+
+    sammy.addEventListener('click', () => {
+      chatBox.classList.toggle('active');
+      if (chatBox.classList.contains('active') && !hasWelcomed) {
+        setTimeout(() => {
+          messages.innerHTML += `
+          <div class="message bot">
+            <img src="sammy_head.png" alt="Sammy cabeza" />
+            <div class="bubble">El cumplimiento nos llama, dime cómo puedo ayudarte el día de hoy.</div>
+          </div>`;
+          messages.scrollTop = messages.scrollHeight;
+          hasWelcomed = true;
+        }, 500);
+      }
+    });
+
+    function minimizeChat() {
+      chatBox.classList.remove('active');
+    }
+
+    function sendMessage() {
+      const userText = input.value.trim();
+      if (!userText) return;
+      messages.innerHTML += `<div class="message user"><div class="bubble">${userText}</div></div>`;
+      messages.scrollTop = messages.scrollHeight;
+      input.value = "";
+
+      setTimeout(() => {
+        messages.innerHTML += `<div class="message bot"><img src="sammy_head.png" /><div class="bubble">Estoy procesando tu solicitud. (Simulado)</div></div>`;
+        messages.scrollTop = messages.scrollHeight;
+      }, 1000);
+    }
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    const triviaData = [
+      {
+        question: "What is the primary goal of Anti-Money Laundering (AML) regulations?",
+        options: { A: "Protect client data", B: "Prevent financial crimes", C: "Monitor employees" },
+        answer: "B"
+      },
+      {
+        question: "Which agency enforces the FCPA?",
+        options: { A: "FBI", B: "FinCEN", C: "SEC" },
+        answer: "C"
+      },
+      {
+        question: "Which of these is a compliance red flag?",
+        options: { A: "Consistent reports", B: "Large round transactions", C: "Audits" },
+        answer: "B"
+      }
+    ];
+
+    let currentTrivia = 0;
+
+    function loadTrivia() {
+      const trivia = triviaData[currentTrivia];
+      document.getElementById("trivia-question").textContent = trivia.question;
+      const optionsBox = document.getElementById("trivia-options");
+      const feedback = document.getElementById("trivia-feedback");
+      feedback.textContent = "";
+      optionsBox.innerHTML = "";
+      for (let key in trivia.options) {
+        const btn = document.createElement("button");
+        btn.textContent = `${key}. ${trivia.options[key]}`;
+        btn.onclick = () => {
+          feedback.textContent = (key === trivia.answer) ? "✅ Correct!" : "❌ Not quite.";
+        };
+        optionsBox.appendChild(btn);
+      }
+      currentTrivia = (currentTrivia + 1) % triviaData.length;
+    }
+
+    loadTrivia();
+    setInterval(loadTrivia, 30000);
+
+    function makeDraggable(box) {
+      let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+      box.onmousedown = function(e) {
+        if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "BUTTON") return;
+        e.preventDefault();
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        document.onmouseup = closeDrag;
+        document.onmousemove = drag;
+      };
+      function drag(e) {
+        posX = mouseX - e.clientX;
+        posY = mouseY - e.clientY;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        box.style.top = (box.offsetTop - posY) + "px";
+        box.style.left = (box.offsetLeft - posX) + "px";
+      }
+      function closeDrag() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    makeDraggable(chatBox);
+    makeDraggable(triviaBox);
+  </script>
+</body>
+</html>
