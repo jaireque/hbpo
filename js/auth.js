@@ -2,7 +2,7 @@ const msalConfig = {
   auth: {
     clientId: "1d0fa77f-17a7-4bad-bf0d-faa907cc230f",
     authority: "https://login.microsoftonline.com/00ded2dd-b4f6-4531-837d-c11f5aa579f9", 
-    redirectUri: "https://sam-agent-hbpo.up.railway.app/"
+    redirectUri: "http://localhost:5500/"
   }
 };
 
