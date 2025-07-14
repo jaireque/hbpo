@@ -2,7 +2,7 @@ const msalConfig = {
   auth: {
     clientId: "1d0fa77f-17a7-4bad-bf0d-faa907cc230f",
     authority: "https://login.microsoftonline.com/00ded2dd-b4f6-4531-837d-c11f5aa579f9", 
-    redirectUri: "http://localhost:5500/"
+    redirectUri: "https://sam-agent-hbpo.up.railway.app/"
   }
 };
 
@@ -24,7 +24,7 @@ export async function login() {
     }
 
     const tokenRequest = {
-      scopes: ["User.Read", "Files.ReadWrite.All", "Sites.ReadWrite.All"],
+      scopes:  ["User.Read", "email", "profile", "openid"] ,
       account: account
     };
 
