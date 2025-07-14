@@ -4,7 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Holdings BPO - Compliance</title>
+
+  <link rel="icon" href="https://holdingsbpo.com/main/assets/img/Favicon-2.png" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
+
+   <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+
   <style>
     html, body {
       margin: 0;
@@ -17,16 +25,68 @@
       position: relative;
     }
 
+    .hrw{
+      margin: 12px 0;
+      height: 7px;
+      width: 80%;
+      background-color: #FFF;
+    }
+
+    #splashScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #333;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: left 1s ease-in-out;
+      flex-direction: column;
+      background-image: url(assets/images/background.png);
+      background-size: cover;
+    }
+
+    .powered{
+      font-family: 'Outfit', sans-serif;
+      text-align: end;
+    }
+
+    #mainContent {
+      display: flex !important;
+      flex-direction: column;
+      background: #0e3987;
+      justify-content: center;
+      align-items: center;
+      width: 80%;
+      margin: 20px auto;
+      padding: 20px;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
     .background {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('fondo_holdings_bpo.webp') no-repeat left bottom;
+      background-color: #001d4a;
+      background: url('./assets/images/fondo_holdings_bpo.webp') no-repeat left bottom;
       background-size: 85%;
       background-position: left bottom;
       z-index: 1;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .background.visible {
+      opacity: 1;
     }
 
     #compliance-container {
@@ -42,6 +102,12 @@
       display: flex;
       gap: 5px;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    #compliance-container.visible {
+      opacity: 1;
     }
 
     #compliance-container span {
@@ -57,6 +123,12 @@
       border: none;
       cursor: pointer;
       z-index: 10;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .boton.visible {
+      opacity: 1;
     }
 
     .boton:hover {
@@ -79,73 +151,182 @@
       line-height: 1.6;
       box-shadow: 0 0 20px rgba(255,255,255,0.2);
       z-index: 15;
-      transition: transform 0.3s ease;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out, transform 0.3s ease;
+    }
+
+    .bubble.visible {
+      opacity: 1;
     }
 
     .bubble::after {
       display: none;
     }
-  </style>
+</style>  
+
+  <!-- Customized Bootstrap/AOS Stylesheet -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
 
-  <!-- Fondo -->
-  <div class="background"></div>
-
-  <!-- Texto Compliance animado -->
-  <div id="compliance-container">
-    <span>C</span><span>O</span><span>M</span><span>P</span><span>L</span><span>I</span><span>A</span><span>N</span><span>C</span><span>E</span>
+  <div id="splashScreen">
+      <div class="row d-flex">
+          <img class="col-6" src="assets/images/HoldingsBPO.png" style="width: 500px; height: auto;">
+          <h1 class="col-6" style="text-align: left; align-self: center;">Holdings <br> <div class="hrw d-none"></div> BPO</h1>
+      </div>
+      <br>
+      <h2 class="powered" style="width: 40%">Powered by <img src="assets/images/Open AI  White.png" style="height: 100px; width: auto; vertical-align: middle; margin-left: 8px;"> </h2>
   </div>
 
-  <!-- Botones funcionales invisibles -->
-  <button id="btn-tools" class="boton"
-    style="top: calc(78.5% + 74px); left: calc(12.5% + 74px); width: calc(180px + 55px); height: 70px;"
-    onclick="location.href='tools.html'" title="Tools"></button>
+  <div id="mainContent">
+    <div class="background"></div>
 
-  <button id="btn-blog" class="boton"
-    style="top: calc(78.5% + 74px); left: calc(28.2% + 74px); width: calc(180px + 74px); height: 70px;"
-    onclick="location.href='blog.html'" title="Blog"></button>
+    <div id="compliance-container">
+      <span>C</span><span>O</span><span>M</span><span>P</span><span>L</span><span>I</span><span>A</span><span>N</span><span>C</span><span>E</span>
+    </div>
 
-  <button id="btn-sam" class="boton"
-    style="top: calc(82% + 37px); left: calc(47.5% + 44px); width: calc(200px + 55px); height: 80px;"
-    onclick="location.href='sanciones.html'" title="SAM"></button>
+    <button id="btn-tools" class="boton"
+      style="top: calc(78.5% + 74px); left: calc(12.5% + 74px); width: calc(180px + 55px); height: 70px;"
+      onclick="location.href='tools.html'" title="Tools"></button>
 
-  <!-- Burbuja decorativa sin triángulo -->
-  <div class="bubble">
-    En Holdings BPO nuestros clientes ponen en nuestras manos el riesgo y nosotros lo transformamos en confianza.
+    <button id="btn-blog" class="boton"
+      style="top: calc(78.5% + 74px); left: calc(28.2% + 74px); width: calc(180px + 74px); height: 70px;"
+      onclick="location.href='blog.html'" title="Blog"></button>
+
+    <button id="btn-sam" class="boton"
+      style="top: calc(82% + 37px); left: calc(47.5% + 44px); width: calc(200px + 55px); height: 80px;"
+      onclick="location.href='sanciones.html'" title="SAM"></button>
+
+    <div class="bubble">
+      En Holdings BPO nuestros clientes ponen en nuestras manos el riesgo y nosotros lo transformamos en confianza.
+    </div>
   </div>
 
-  <!-- Animación Compliance -->
+  <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.18.0/js/msal-browser.min.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/index.js"></script>
+  <script type="module">
+      import { makeFetch, isEmptyString } from './js/index.js';
+      import { login } from './js/auth.js';
+
+      window.makeFetch = makeFetch;
+      window.isEmptyString = isEmptyString;
+      window.login = login;
+
+      document.addEventListener('DOMContentLoaded', async function () {
+        AOS.init();
+
+        try {
+            const isLoggedIn = await login();
+
+            if (isLoggedIn === true) {
+                console.log("User is logged in");
+
+                setTimeout(function () {
+                    const splash = document.getElementById('splashScreen');
+                    const mainContent = document.getElementById('mainContent');
+                    
+                    splash.style.left = '100%';
+
+                    setTimeout(function () {
+                        splash.style.display = 'none';
+                        mainContent.style.display = 'block';
+                        
+                        // Animate main content elements
+                        const background = document.querySelector('.background');
+                        const complianceContainer = document.getElementById('compliance-container');
+                        const buttons = document.querySelectorAll('.boton');
+                        const bubble = document.querySelector('.bubble');
+                        
+                        if (background) background.classList.add('visible');
+                        if (complianceContainer) complianceContainer.classList.add('visible');
+                        if (bubble) bubble.classList.add('visible');
+                        
+                        buttons.forEach(button => button.classList.add('visible'));
+                        
+                    }, 600);
+                }, 1000);
+            } else {
+                console.log("User is not logged in");
+    
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Not Logged In',
+                    text: 'Login is required. Please enable popups and refresh.',
+                });
+            }
+
+        } catch (error) {
+            console.error("Login error:", error);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Not Logged In',
+                text: 'Login is required. Please enable popups and refresh.',
+            });
+        }
+    });
+
+      function deleteAllCookies() {
+          const cookies = document.cookie.split(";");
+
+          for (let cookie of cookies) {
+              const eqPos = cookie.indexOf("=");
+              const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+              document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=None;Secure";
+              document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+          }
+      }
+
+      deleteAllCookies();
+      localStorage.clear();
+      sessionStorage.clear();
+      console.log("Session storage and cookies cleared.");
+  </script>
   <script>
     const container = document.getElementById("compliance-container");
-    const letters = Array.from(container.children);
+    
+    // Wait for main content to be visible before starting letter animation
+    setTimeout(() => {
+      if (container) {
+        const letters = Array.from(container.children);
 
-    function disorganizeLetters() {
-      letters.forEach((letter, i) => {
-        const offsetX = (Math.random() - 0.5) * 300;
-        const offsetY = (Math.random() - 0.5) * 300;
-        letter.style.transitionDelay = `${Math.random()}s`;
-        letter.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${Math.random() * 360}deg)`;
-        letter.style.opacity = 0.2;
-      });
-    }
+        function disorganizeLetters() {
+          letters.forEach((letter, i) => {
+            const offsetX = (Math.random() - 0.5) * 300;
+            const offsetY = (Math.random() - 0.5) * 300;
+            letter.style.transitionDelay = `${Math.random()}s`;
+            letter.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${Math.random() * 360}deg)`;
+            letter.style.opacity = 0.2;
+          });
+        }
 
-    function organizeLetters() {
-      letters.forEach((letter, i) => {
-        letter.style.transitionDelay = `${i * 0.05}s`;
-        letter.style.transform = `translate(0, 0) rotate(0deg)`;
-        letter.style.opacity = 1;
-      });
-    }
+        function organizeLetters() {
+          letters.forEach((letter, i) => {
+            letter.style.transitionDelay = `${i * 0.05}s`;
+            letter.style.transform = `translate(0, 0) rotate(0deg)`;
+            letter.style.opacity = 1;
+          });
+        }
 
-    function animateLoop() {
-      disorganizeLetters();
-      setTimeout(organizeLetters, 2500);
-      setTimeout(disorganizeLetters, 10000);
-    }
+        function animateLoop() {
+          disorganizeLetters();
+          setTimeout(organizeLetters, 2500);
+          setTimeout(disorganizeLetters, 10000);
+        }
 
-    animateLoop();
-    setInterval(animateLoop, 15000);
+        animateLoop();
+        setInterval(animateLoop, 15000);
+      }
+    }, 4000); // Start after main content is fully visible
   </script>
 
 </body>

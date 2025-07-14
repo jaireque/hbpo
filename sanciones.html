@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SAM - Sanction and Adverse Media</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://holdingsbpo.com/main/assets/img/Favicon-2.png" />
   <style>
     html, body {
       margin: 0;
@@ -270,7 +271,7 @@
   <div class="circle"></div>
   <div class="circle small"></div>
 
-  <img src="sammy.png" class="sammy bounce" id="sammy" alt="Sammy" />
+  <img src="assets/images/sammy.png" class="sammy bounce" id="sammy" alt="Sammy" />
 
   <!-- Trivia -->
   <div class="trivia-box" id="trivia-box">
@@ -313,7 +314,7 @@
         setTimeout(() => {
           messages.innerHTML += `
           <div class="message bot">
-            <img src="sammy_head.png" alt="Sammy cabeza" />
+            <img src="assets/images/sammy_head.png" alt="Sammy cabeza" />
             <div class="bubble">El cumplimiento nos llama, dime cómo puedo ayudarte el día de hoy.</div>
           </div>`;
           messages.scrollTop = messages.scrollHeight;
@@ -334,7 +335,7 @@
       input.value = "";
 
       setTimeout(() => {
-        messages.innerHTML += `<div class="message bot"><img src="sammy_head.png" /><div class="bubble">Estoy procesando tu solicitud. (Simulado)</div></div>`;
+        messages.innerHTML += `<div class="message bot"><img src="assets/images/sammy_head.png" /><div class="bubble">Estoy procesando tu solicitud. (Simulado)</div></div>`;
         messages.scrollTop = messages.scrollHeight;
       }, 1000);
     }

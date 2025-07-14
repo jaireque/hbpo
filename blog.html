@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAM - Compliance Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://holdingsbpo.com/main/assets/img/Favicon-2.png" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+      background: radial-gradient(circle at center, #0039a6 0%, #1A2B45 100%);
+      min-height: 100vh;
+    }
+
+    .noise {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/noise.png');
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .circle, .circle.small {
+      position: fixed;
+      border-radius: 50%;
+      z-index: 0;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .circle {
+      width: 800px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .circle.small {
+      width: 400px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #2ea3f2;
+      background-color: transparent;
+      border: 2px solid #2ea3f2;
+      padding: 8px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 10;
+      animation: float-bounce 2.5s ease-in-out infinite;
+      box-shadow: 0 0 6px #2ea3f240;
+    }
+
+    .back-button:hover {
+      background-color: #2ea3f2;
+      color: #0f1d30;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #2ea3f2;
+    }
+
+    .back-icon {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      transition: stroke 0.3s ease;
+    }
+
+    @keyframes float-bounce {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 2;
+      padding: 80px 20px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      text-align: center;
+      color: white;
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 60px;
+      text-shadow: 0 0 10px rgba(46, 163, 242, 0.5);
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .blog-card {
+      background: linear-gradient(145deg, #1a2b45, #0f1d30);
+      border: 2px solid #2ea3f2;
+      border-radius: 16px;
+      padding: 24px;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(46, 163, 242, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(46, 163, 242, 0.4);
+      border-color: #a4d2f3;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #2ea3f2, #a4d2f3);
+    }
+
+    .blog-date {
+      color: #a4d2f3;
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .blog-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    .blog-excerpt {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: #e0e0e0;
+    }
+
+    .blog-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .blog-tag {
+      background: rgba(46, 163, 242, 0.2);
+      color: #a4d2f3;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(46, 163, 242, 0.3);
+    }
+
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #2ea3f2;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .read-more:hover {
+      color: #a4d2f3;
+    }
+
+    .featured-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(145deg, #2ea3f2, #1b8cd4);
+      color: white;
+      border: none;
+    }
+
+    .featured-card .blog-title {
+      font-size: 28px;
+    }
+
+    .featured-card .blog-excerpt {
+      font-size: 18px;
+      color: white;
+    }
+
+    .featured-card .blog-date {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .featured-card .blog-tag {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .sammy {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      height: 200px;
+      z-index: 5;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .sammy:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .bounce {
+      animation: bounce 2s infinite;
+    }
+
+    @media (max-width: 768px) {
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-title {
+        font-size: 36px;
+      }
+      
+      .main-content {
+        padding: 80px 15px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="circle"></div>
+  <div class="circle small"></div>
+
+  <a href="index.html" class="back-button">
+    <svg xmlns="http://www.w3.org/2000/svg" class="back-icon" viewBox="0 0 24 24" fill="none" stroke="#2ea3f2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+
+  <div class="main-content">
+    <h1 class="page-title">🏛️ Compliance Blog</h1>
+    
+    <div class="blog-grid">
+      <!-- Featured Article -->
+      <article class="blog-card featured-card">
+        <div class="blog-date">December 15, 2024</div>
+        <h2 class="blog-title">🚨 New AML Regulations: What You Need to Know</h2>
+        <div class="blog-tags">
+          <span class="blog-tag">AML</span>
+          <span class="blog-tag">Regulations</span>
+          <span class="blog-tag">Featured</span>
+        </div>
+        <p class="blog-excerpt">
+          The latest Anti-Money Laundering regulations have introduced significant changes to compliance requirements. This comprehensive guide covers the key updates, implementation timelines, and practical steps for ensuring your organization remains compliant.
+        </p>
+        <a href="#" class="read-more">Read Full Article →</a>
+      </article>
+
+      <!-- Regular Articles -->
+      <article class="blog-card">
+        <div class="blog-date">December 10, 2024</div>
+        <h2 class="blog-title">🔍 KYC Best Practices for 2025</h2>
+        <div class="blog-tags">
+          <span class="blog-tag">KYC</span>
+          <span class="blog-tag">Best Practices</span>
+        </div>
+        <p class="blog-excerpt">
+          Discover the most effective Know Your Customer strategies for the upcoming year. From digital identity verification to risk assessment frameworks, learn how to streamline your KYC processes.
+        </p>
+        <a href="#" class="read-more">Read More →</a>
+      </article>
+
+      <article class="blog-card">
+        <div class="blog-date">December 8, 2024</div>
+        <h2 class="blog-title">⚖️ Sanctions Screening: A Complete Guide</h2>
+        <div class="blog-tags">
+          <span class="blog-tag">Sanctions</span>
+          <span class="blog-tag">Screening</span>
+        </div>
+        <p class="blog-excerpt">
+          Understanding the complexities of sanctions screening is crucial for compliance teams. This guide provides insights into automated screening systems, false positive management, and regulatory requirements.
+        </p>
+        <a href="#" class="read-more">Read More →</a>
+      </article>
+
+      <article class="blog-card">
+        <div class="blog-date">December 5, 2024</div>
+        <h2 class="blog-title">🤖 AI in Compliance: Opportunities and Challenges</h2>
+        <div class="blog-tags">
+          <span class="blog-tag">AI</span>
+          <span class="blog-tag">Technology</span>
+          <span class="blog-tag">Innovation</span>
+        </div>
+        <p class="blog-excerpt">
+          Artificial Intelligence is revolutionizing compliance operations. Explore how AI can enhance transaction monitoring, reduce false positives, and improve overall compliance effectiveness.
+        </p>
+        <a href="#" class="read-more">Read More →</a>
+      </article>
+
+      <article class="blog-card">
+        <div class="blog-date">December 3, 2024</div>
+        <h2 class="blog-title">📊 Risk Assessment Frameworks</h2>
+        <div class="blog-tags">
+          <span class="blog-tag">Risk Management</span>
+          <span class="blog-tag">Assessment</span>
+        </div>
+        <p class="blog-excerpt">
+          Effective risk assessment is the foundation of any compliance program. Learn about different frameworks, methodologies, and tools that can help you identify and mitigate compliance risks.
+        </p>
+        <a href="#" class="read-more">Read More →</a>
+      </article>
+
+      <article class="blog-card">
+        <div class="blog-date">November 28, 2024</div>
+        <h2 class="blog-title">🔒 Data Privacy in Financial Services</h2>
+        <div class="blog-tags">
+          <span class="blog-tag">Data Privacy</span>
+          <span class="blog-tag">GDPR</span>
+          <span class="blog-tag">Security</span>
+        </div>
+        <p class="blog-excerpt">
+          With increasing data privacy regulations, financial institutions must balance compliance requirements with operational efficiency. Discover strategies for protecting customer data while maintaining compliance.
+        </p>
+        <a href="#" class="read-more">Read More →</a>
+      </article>
+    </div>
+  </div>
+
+  <img src="assets/images/sammy.png" class="sammy bounce" alt="Sammy" />
+
+  <script>
+    // Add some interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+      const sammy = document.querySelector('.sammy');
+      const cards = document.querySelectorAll('.blog-card');
+      
+      // Animate cards on scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      });
+
+      cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+      });
+
+      // Sammy bounce animation
+      setInterval(() => {
+        sammy.classList.toggle('bounce');
+      }, 10000);
+    });
+  </script>
+</body>
+</html>
