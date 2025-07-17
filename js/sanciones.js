@@ -80,8 +80,9 @@ function sendMessage() {
   messages.innerHTML += `
     <div class="message bot" id="${loaderId}">
       <img src="assets/images/sammy_head.png" />
-      <div class="bubble" syle="display: flex; align-items: center; justify-content: center;">
+      <div class="bubble" style="display: flex; align-items: center; justify-content: center;">
         <img src="assets/images/loader.gif" class="loader-gif" alt="Loading..." />
+        Sammy está pensando...
       </div>
     </div>`;
   messages.scrollTop = messages.scrollHeight;
@@ -152,6 +153,21 @@ const triviaData = [
     question: "Which of these is a compliance red flag?",
     options: { A: "Consistent reports", B: "Large round transactions", C: "Audits" },
     answer: "B"
+  },
+  {
+    question: "What does KYC stand for?",
+    options: { A: "Know Your Customer", B: "Keep Your Compliance", C: "Key Yearly Check" },
+    answer: "A"
+  },
+  {
+    question: "Which of these is NOT a red flag for money laundering?",
+    options: { A: "Frequent large cash deposits", B: "Regular salary payments", C: "Transactions with no clear purpose" },
+    answer: "B"
+  },
+  {
+    question: "What is the main purpose of sanctions screening?",
+    options: { A: "Tax compliance", B: "Preventing business with prohibited entities", C: "Marketing research" },
+    answer: "B"
   }
 ];
 
@@ -170,6 +186,11 @@ function loadTrivia() {
     btn.textContent = `${key}. ${trivia.options[key]}`;
     btn.onclick = () => {
       feedback.textContent = (key === trivia.answer) ? "✅ Correct!" : "❌ Not quite.";
+      
+      // Auto-advance to next question after 2 seconds
+      setTimeout(() => {
+        loadTrivia();
+      }, 2000);
     };
     optionsBox.appendChild(btn);
   }
@@ -188,13 +209,16 @@ function makeDraggable(box) {
   if (chatHeader) {
     chatHeader.onmousedown = function (e) {
       if (e.target.tagName === "BUTTON") return;
+      
       e.preventDefault();
       mouseX = e.clientX;
       mouseY = e.clientY;
       document.onmouseup = closeDrag;
       document.onmousemove = drag;
+      
       chatHeader.style.cursor = 'grabbing';
     };
+    
     chatHeader.style.cursor = 'grab';
   } else {
     box.onmousedown = function (e) {
@@ -208,20 +232,39 @@ function makeDraggable(box) {
   }
 
   function drag(e) {
+    e.preventDefault();
     posX = mouseX - e.clientX;
     posY = mouseY - e.clientY;
     mouseX = e.clientX;
     mouseY = e.clientY;
-    box.style.top = (box.offsetTop - posY) + "px";
-    box.style.left = (box.offsetLeft - posX) + "px";
+    
+    let newTop = box.offsetTop - posY;
+    let newLeft = box.offsetLeft - posX;
+    
+    const rect = box.getBoundingClientRect();
+    const maxTop = window.innerHeight - rect.height;
+    const maxLeft = window.innerWidth - rect.width;
+    
+    newTop = Math.max(0, Math.min(newTop, maxTop));
+    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+    
+    box.style.top = newTop + "px";
+    box.style.left = newLeft + "px";
   }
 
   function closeDrag() {
     document.onmouseup = null;
     document.onmousemove = null;
-    if (chatHeader) chatHeader.style.cursor = 'grab';
+    
+    if (chatHeader) {
+      chatHeader.style.cursor = 'grab';
+    }
   }
 }
 
 makeDraggable(chatBox);
 makeDraggable(triviaBox);
+
+window.sendMessage = sendMessage;
+window.minimizeChat = minimizeChat;
+window.removeFile = removeFile;
