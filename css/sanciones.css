@@ -155,9 +155,11 @@ html, body {
 
     .bubble {
       background: #2ea3f2;
-      padding: 10px 14px;
+      color: white;
+      padding: 10px 12px;
       border-radius: 12px;
-      max-width: 70%;
+      max-width: 60%;
+      word-wrap: break-word;
     }
 
     .user .bubble {
