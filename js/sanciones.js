@@ -7,7 +7,7 @@ const fileInput = document.getElementById('file-input');
 const filePreview = document.getElementById('file-preview');
 
 let hasWelcomed = false;
-let threadId = null;
+let threadId = localStorage.getItem('threadId') || null;
 let selectedFile = null;
 
 setInterval(() => {
@@ -104,9 +104,12 @@ function sendMessage() {
       const loaderElement = document.getElementById(loaderId);
       if (loaderElement) loaderElement.remove();
 
-      if (data.threadId) threadId = data.threadId;
-      const botResponse = data.response || data.message || 'Lo siento, no pude procesar tu solicitud.';
+      if (data.threadId) {
+        threadId = data.threadId;
+        localStorage.setItem('threadId', threadId); // Guardar threadId
+      }
 
+      const botResponse = data.response || data.message || 'Lo siento, no pude procesar tu solicitud.';
       const botBubble = document.createElement('div');
       botBubble.className = 'message bot';
       botBubble.innerHTML = `
@@ -186,8 +189,6 @@ function loadTrivia() {
     btn.textContent = `${key}. ${trivia.options[key]}`;
     btn.onclick = () => {
       feedback.textContent = (key === trivia.answer) ? "✅ Correct!" : "❌ Not quite.";
-      
-      // Auto-advance to next question after 2 seconds
       setTimeout(() => {
         loadTrivia();
       }, 2000);
@@ -209,16 +210,16 @@ function makeDraggable(box) {
   if (chatHeader) {
     chatHeader.onmousedown = function (e) {
       if (e.target.tagName === "BUTTON") return;
-      
+
       e.preventDefault();
       mouseX = e.clientX;
       mouseY = e.clientY;
       document.onmouseup = closeDrag;
       document.onmousemove = drag;
-      
+
       chatHeader.style.cursor = 'grabbing';
     };
-    
+
     chatHeader.style.cursor = 'grab';
   } else {
     box.onmousedown = function (e) {
@@ -237,17 +238,17 @@ function makeDraggable(box) {
     posY = mouseY - e.clientY;
     mouseX = e.clientX;
     mouseY = e.clientY;
-    
+
     let newTop = box.offsetTop - posY;
     let newLeft = box.offsetLeft - posX;
-    
+
     const rect = box.getBoundingClientRect();
     const maxTop = window.innerHeight - rect.height;
     const maxLeft = window.innerWidth - rect.width;
-    
+
     newTop = Math.max(0, Math.min(newTop, maxTop));
     newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-    
+
     box.style.top = newTop + "px";
     box.style.left = newLeft + "px";
   }
@@ -255,7 +256,7 @@ function makeDraggable(box) {
   function closeDrag() {
     document.onmouseup = null;
     document.onmousemove = null;
-    
+
     if (chatHeader) {
       chatHeader.style.cursor = 'grab';
     }
@@ -268,3 +269,18 @@ makeDraggable(triviaBox);
 window.sendMessage = sendMessage;
 window.minimizeChat = minimizeChat;
 window.removeFile = removeFile;
+
+// === Reset button (opcional) ===
+const resetBtn = document.getElementById("reset-thread");
+if (resetBtn) {
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem('threadId');
+    threadId = null;
+    messages.innerHTML += `
+      <div class="message bot">
+        <img src="assets/images/sammy_head.png" />
+        <div class="bubble">🔄 He olvidado el contexto. Puedes comenzar una nueva conversación.</div>
+      </div>`;
+    messages.scrollTop = messages.scrollHeight;
+  });
+}

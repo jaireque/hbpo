@@ -39,6 +39,12 @@
       <button class="close-btn" onclick="minimizeChat()">✖</button>
     </div>
     <div class="chat-messages" id="chat-messages"></div>
+
+    <!-- Aquí va el nuevo botón -->
+    <div class="reset-thread-container">
+      <button id="reset-thread" title="Olvidar conversación actual">🔄 Resetear Hilo</button>
+    </div>
+
     <div class="chat-input">
       <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" style="display: none;" />
       <button type="button" class="attach-btn" onclick="document.getElementById('file-input').click()" title="Attach file">

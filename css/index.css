@@ -1,0 +1,171 @@
+html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      background-color: #001d4a;
+      position: relative;
+    }
+
+   .hrw{
+      margin: 12px 0;
+      height: 7px;
+      width: 80%;
+      background-color: #FFF;
+    }
+
+    #splashScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #333;
+      background: url('../assets/images/background.png') no-repeat center center;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; 
+      transition: left 1s ease-in-out;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .powered{
+      font-family: 'Outfit', sans-serif;
+      text-align: end;
+    }
+
+   #mainContent {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #001d4a;
+    background-image: url('../assets/images/fondo_holdings_bpo.webp');
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 90%;
+    z-index: 1;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+    #mainContent.visible {
+      opacity: 1;
+    }
+
+    #compliance-container {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 64px;
+      font-weight: bold;
+      color: white;
+      letter-spacing: 8px;
+      z-index: 5;
+      display: flex;
+      gap: 5px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    #compliance-container.visible {
+      opacity: 1;
+    }
+
+    #compliance-container span {
+      display: inline-block;
+      transform: translate(0, 0);
+      opacity: 0;
+      transition: transform 1.2s ease, opacity 1s ease;
+    }
+
+    .boton {
+      position: absolute;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .boton.visible {
+      opacity: 1;
+    }
+
+    .boton:hover {
+      transform: scale(1.1) translateY(-10px) translateX(70px);
+      box-shadow: 
+        0 0 15px rgba(46, 163, 242, 0.6),
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 2px rgba(46, 163, 242, 0.8);
+      background: linear-gradient(
+        135deg, 
+        rgba(46, 163, 242, 0.1) 0%, 
+        rgba(164, 210, 243, 0.2) 50%, 
+        rgba(46, 163, 242, 0.1) 100%
+      );
+      animation: pulse-glow 0.6s ease-out;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 
+          0 0 15px rgba(46, 163, 242, 0.6),
+          0 4px 12px rgba(0, 0, 0, 0.3),
+          inset 0 0 0 2px rgba(46, 163, 242, 0.8);
+      }
+      50% {
+        box-shadow: 
+          0 0 25px rgba(46, 163, 242, 0.9),
+          0 6px 18px rgba(0, 0, 0, 0.4),
+          inset 0 0 0 3px rgba(164, 210, 243, 1);
+      }
+      100% {
+        box-shadow: 
+          0 0 15px rgba(46, 163, 242, 0.6),
+          0 4px 12px rgba(0, 0, 0, 0.3),
+          inset 0 0 0 2px rgba(46, 163, 242, 0.8);
+      }
+    }
+
+
+    /* Burbuja sin triángulo */
+    .bubble {
+      position: absolute;
+      right: calc(-62px + 90px);
+      bottom: calc(180px + 740px - 350px);
+      max-width: 400px;
+      background: #ffffff;
+      color: #001d4a;
+      border-radius: 20px;
+      padding: 24px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.6;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      z-index: 15;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out, transform 0.3s ease;
+    }
+
+    .bubble.visible {
+      opacity: 1;
+    }
+
+    .bubble::after {
+      display: none;
+    }
